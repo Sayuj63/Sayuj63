@@ -1,6 +1,6 @@
 # 👋 Hi, I'm Sayuj Pillai!
 
-![Loading GIF](https://media.giphy.com/media/3ohhwpU2gfowQ2jwsc/giphy.gif)
+![Loading GIF](https://media.giphy.com/media/xT0GqvV7zONgslOQ6w/giphy.gif)
 
 Aspiring Web Developer | B.Tech CSE | Passionate about building interactive web applications and exploring AI/ML 🚀
 
@@ -34,6 +34,8 @@ Aspiring Web Developer | B.Tech CSE | Passionate about building interactive web 
 - [Email](mailto:sayujpillai63@gmail.com)  
 
 ---
+
+Feel free to check out my repositories and projects above! 😊
 
 Feel free to check out my repositories and projects above! 😊
 
