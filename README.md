@@ -1,5 +1,7 @@
 # 👋 Hi, I'm Sayuj Pillai!
 
+![Loading GIF](https://media.giphy.com/media/3ohhwpU2gfowQ2jwsc/giphy.gif)
+
 Aspiring Web Developer | B.Tech CSE | Passionate about building interactive web applications and exploring AI/ML 🚀
 
 ## 🔧 Technologies & Skills
@@ -24,10 +26,6 @@ Aspiring Web Developer | B.Tech CSE | Passionate about building interactive web 
 - Contributing to open-source projects  
 - Building innovative web applications  
 - Exploring AI/ML technologies  
-
-## 🖼️ Project GIF
-
-![Project Demo](https://media.giphy.com/media/1hGOS0ntVuc6chrtZb/giphy.gif)
 
 ## 🌐 Let's Connect
 
