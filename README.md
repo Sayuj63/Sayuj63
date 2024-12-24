@@ -1,6 +1,6 @@
 # 👋 Hi, I'm Sayuj Pillai!
 
-Aspiring Web Developer | B.Tech CSE | Passionate about AI/ML and Web Development 🚀
+Aspiring Web Developer | B.Tech CSE | Passionate about building interactive web applications and exploring AI/ML 🚀
 
 ## 🔧 Technologies & Skills
 
@@ -14,18 +14,10 @@ Aspiring Web Developer | B.Tech CSE | Passionate about AI/ML and Web Development
 [![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)](https://git-scm.com/)  
 [![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/)  
 
-## 💼 Work Experience
+## 🌟 Current Projects
 
-### Web Developer Intern | The White Crow Media | Dec 2024 - Present  
-- Developed a fully functional website for a school, implementing modern design principles and interactive features.
-- Utilized HTML, CSS, JavaScript to create responsive layouts and dynamic content.
-
-### Web Developer Intern | Atrey.dev (Stipend-based) | Oct 2024 - Present  
-- Worked on web development and AI/ML projects.
-- Assisted in building user interfaces and integrating machine learning algorithms into web applications.
-
-### Freelance Web Developer | Jan 2024 - Oct 2024  
-- Designed and developed responsive websites for small businesses, focusing on clean design and optimized performance.
+- **Beauty Products Website**: A modern e-commerce website for beauty products with a fully functional cart and product display system.
+- **AI/ML Portfolio**: Developing machine learning models for real-time predictions.
 
 ## 📈 Current Goals
 
@@ -35,7 +27,8 @@ Aspiring Web Developer | B.Tech CSE | Passionate about AI/ML and Web Development
 
 ## 🌐 Let's Connect
 
-- [LinkedIn](https://linkedin.com/in/sayuj-pillai-139a07315)  
+- [LinkedIn](https://www.linkedin.com/in/sayuj-pillai-139a07315)  
+- [X.com](https://x.com/PillaiSayu12847)  
 - [Email](mailto:sayujpillai63@gmail.com)  
 
 ---
