@@ -20,7 +20,7 @@ Aspiring Web Developer | B.Tech CSE | Passionate about AI/ML and Web Development
 - Developed a fully functional website for a school, implementing modern design principles and interactive features.
 - Utilized HTML, CSS, JavaScript to create responsive layouts and dynamic content.
 
-### Web Developer Intern | Corizo (Stipend-based) | Oct 2024 - Present  
+### Web Developer Intern | Atrey.dev (Stipend-based) | Oct 2024 - Present  
 - Worked on web development and AI/ML projects.
 - Assisted in building user interfaces and integrating machine learning algorithms into web applications.
 
