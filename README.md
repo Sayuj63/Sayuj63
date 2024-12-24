@@ -25,6 +25,10 @@ Aspiring Web Developer | B.Tech CSE | Passionate about building interactive web 
 - Building innovative web applications  
 - Exploring AI/ML technologies  
 
+## 🖼️ Project GIF
+
+![Project Demo](https://media.giphy.com/media/1hGOS0ntVuc6chrtZb/giphy.gif)
+
 ## 🌐 Let's Connect
 
 - [LinkedIn](https://www.linkedin.com/in/sayuj-pillai-139a07315)  
@@ -34,3 +38,4 @@ Aspiring Web Developer | B.Tech CSE | Passionate about building interactive web 
 ---
 
 Feel free to check out my repositories and projects above! 😊
+
