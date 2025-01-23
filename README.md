@@ -19,8 +19,10 @@ Aspiring Web Developer | B.Tech CSE | Passionate about building interactive web 
 ## 🌟 Current Projects
 
 - **Beauty Products Website**: A modern e-commerce website for beauty products with a fully functional cart and product display system.
-- **AI/ML Portfolio**: Developing machine learning models for real-time predictions.
-
+- **AI/ML Portfolio**: Developing machine learning models for real-time predictions
+- **AnnounceItlify**: A powerful automation tool for academic institutions:
+- **Angular 3D Portfolio** : A professional 3D portfolio website
+ 
 ## 📈 Current Goals
 
 - Contributing to open-source projects  
