@@ -41,7 +41,7 @@ Aspiring Web Developer | B.Tech CSE | Passionate about building interactive web 
 
 <p>&nbsp;<img align="center" src="https://github-readme-stats.vercel.app/api?username=sayuj63&show_icons=true&locale=en" alt="sayuj63" /></p>
 
-<p><img align="center" src="https://github-readme-streak-stats.herokuapp.com/?user=sayuj63&" alt="rajneesh001-hub" /></p>
+<p><img align="center" src="https://github-readme-streak-stats.herokuapp.com/?user=sayuj63&" alt="sayuj63" /></p>
 
 
 
