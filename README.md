@@ -38,7 +38,7 @@ Aspiring Web Developer | B.Tech CSE | Passionate about building interactive web 
 ---
 
 
-<a href="https://git.io/streak-stats"><img src="https://github-readme-streak-stats.herokuapp.com?user=Sayuj63" alt="GitHub Streak" /></a>
+[![GitHub Streak](https://github-readme-streak-stats.herokuapp.com?user=Sayuj63)](https://git.io/streak-stats)
 
 Feel free to check out my repositories and projects above! 😊
 
