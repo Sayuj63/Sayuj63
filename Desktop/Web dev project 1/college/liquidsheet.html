@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopify Liquid Cheat Sheet</title>
+    <style>
+        /* Dark Theme Colors */
+        :root {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #252525;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent: #6366f1;
+            --code-bg: #2d2d2d;
+            --border: #404040;
+        }
+
+        /* Light Theme Colors */
+        :root[data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent: #4f46e5;
+            --code-bg: #f0f0f0;
+            --border: #e0e0e0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1, h2, h3 {
+            color: var(--accent);
+            margin: 2rem 0 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        h1:hover, h2:hover, h3:hover {
+            transform: translateX(10px);
+        }
+
+        .section {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        code {
+            background: var(--code-bg);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        ul, ol {
+            padding-left: 2rem;
+            margin: 1rem 0;
+        }
+
+        li {
+            margin: 0.5rem 0;
+        }
+
+        .resources {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .resource-card {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .resource-card:hover {
+            transform: scale(1.05);
+            border-color: var(--accent);
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #8385f4;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 2rem 0;
+        }
+
+        /* Dark mode toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--accent);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            background: #8385f4;
+        }
+
+      
+       
+
+        /* Copyright styles */
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer p {
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="typing-title">Shopify Liquid to HTML Cheat Sheet</h1>
+        <p>A comprehensive guide for both beginners and senior developers</p>
+
+        <div class="section">
+            <h2>Basic Liquid Syntax</h2>
+            <ul>
+                <li><code>{{ "{{ product.title }}" }}</code> - Objects output content</li>
+                <li><code>{% "{% if %}" %}</code>, <code>{% "{% for %}" %}</code> - Tags control logic</li>
+                <li><code>{{ "{{ name | upcase }}" }}</code> - Filters modify output</li>
+            </ul>
+            <pre><code>// Basic Object Example
+{{ "{{ product.title }}" }}
+{{ "{{ product.price | money_with_currency }}" }}
+{{ "{{ product.description | truncate: 150 }}" }}
+
+// Basic Tag Example
+{% "{% if product.available %}" %}
+  In stock!
+{% "{% else %}" %}
+  Sold out!
+{% "{% endif %}" %}</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>Advanced Liquid Objects</h2>
+            <h3>Product Object</h3>
+            <pre><code>// Product Properties
+{{ "{{ product.title }}" }}
+{{ "{{ product.description }}" }}
+{{ "{{ product.price }}" }}
+{{ "{{ product.available }}" }}
+{{ "{{ product.variants }}" }}
+{{ "{{ product.images }}" }}
+{{ "{{ product.selected_variant }}" }}
+{{ "{{ product.first_available_variant }}" }}</code></pre>
+
+            <h3>Collection Object</h3>
+            <pre><code>// Collection Properties
+{{ "{{ collection.title }}" }}
+{{ "{{ collection.description }}" }}
+{{ "{{ collection.all_products }}" }}
+{{ "{{ collection.products_count }}" }}
+{{ "{{ collection.default_sort_by }}" }}</code></pre>
+
+            <h3>Cart Object</h3>
+            <pre><code>// Cart Properties
+{{ "{{ cart.items }}" }}
+{{ "{{ cart.item_count }}" }}
+{{ "{{ cart.total_price }}" }}
+{{ "{{ cart.original_total_price }}" }}
+{{ "{{ cart.total_discount }}" }}</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>Control Flow</h2>
+            <h3>Conditional Statements</h3>
+            <pre><code>// If Statement
+{% "{% if condition %}" %}
+  // code
+{% "{% elsif other_condition %}" %}
+  // code
+{% "{% else %}" %}
+  // code
+{% "{% endif %}" %}
+
+// Unless Statement
+{% "{% unless condition %}" %}
+  // code
+{% "{% endunless %}" %}
+
+// Case Statement
+{% "{% case handle %}" %}
+  {% "{% when 'value1' %}" %}
+    // code
+  {% "{% when 'value2' %}" %}
+    // code
+  {% "{% else %}" %}
+    // default code
+{% "{% endcase %}" %}</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>Loops and Iterations</h2>
+            <pre><code>// Basic For Loop
+{% "{% for product in collection.products %}" %}
+  {{ "{{ product.title }}" }}
+{% "{% endfor %}" %}
+
+// For Loop with Limit
+{% "{% for product in collection.products limit:5 %}" %}
+  {{ "{{ product.title }}" }}
+{% "{% endfor %}" %}
+
+// For Loop with Offset
+{% "{% for product in collection.products offset:5 limit:5 %}" %}
+  {{ "{{ product.title }}" }}
+{% "{% endfor %}" %}
+
+// Reversed Loop
+{% "{% for item in collection.products reversed %}" %}
+  {{ "{{ item.title }}" }}
+{% "{% endfor %}" %}</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>Advanced Filters</h2>
+            <h3>String Filters</h3>
+            <pre><code>{{ "{{ product.title | upcase }}" }}  // Converts to uppercase
+{{ "{{ product.title | downcase }}" }}  // Converts to lowercase
+{{ "{{ product.title | capitalize }}" }}  // Capitalizes first letter
+{{ "{{ product.title | escape }}" }}  // Escapes HTML
+{{ "{{ product.title | strip_html }}" }}  // Removes HTML tags
+{{ "{{ product.title | truncate: 20, '...' }}" }}  // Truncates text</code></pre>
+
+            <h3>Number Filters</h3>
+            <pre><code>{{ "{{ product.price | money }}" }}  // Formats as money
+{{ "{{ product.price | money_without_currency }}" }}
+{{ "{{ product.price | money_with_currency }}" }}
+{{ "{{ 3 | times: 2 }}" }}  // Mathematical operations
+{{ "{{ 3 | divided_by: 2 }}" }}
+{{ "{{ 3 | plus: 2 }}" }}
+{{ "{{ 3 | minus: 2 }}" }}</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>Working with Arrays</h2>
+            <pre><code>// Array Filters
+{{ "{{ product.tags | join: ', ' }}" }}  // Joins array elements
+{{ "{{ product.tags | first }}" }}  // Gets first element
+{{ "{{ product.tags | last }}" }}  // Gets last element
+{{ "{{ product.tags | size }}" }}  // Gets array size
+{{ "{{ product.tags | sort }}" }}  // Sorts array
+{{ "{{ product.tags | uniq }}" }}  // Removes duplicates</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>Resources</h2>
+            <div class="resources">
+                <a href="https://shopify.dev/docs/themes/liquid/reference" class="resource-card">
+                    <h3>Liquid Reference</h3>
+                    <p>Official Shopify documentation</p>
+                </a>
+                <a href="https://shopify.dev/docs/themes" class="resource-card">
+                    <h3>Theme Development</h3>
+                    <p>Learn theme development</p>
+                </a>
+                <a href="https://community.shopify.com" class="resource-card">
+                    <h3>Community</h3>
+                    <p>Join the Shopify community</p>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <button class="theme-toggle">Toggle Theme</button>
+
+    <script>
+        // Micro-interactions
+        document.querySelectorAll('.section').forEach(section => {
+            section.addEventListener('mouseenter', () => {
+                section.style.transform = 'translateY(-5px)';
+                section.style.boxShadow = '0 10px 20px rgba(0,0,0,0.2)';
+            });
+
+            section.addEventListener('mouseleave', () => {
+                section.style.transform = 'translateY(0)';
+                section.style.boxShadow = 'none';
+            });
+        });
+
+        // Code block copy functionality
+        document.querySelectorAll('pre').forEach(block => {
+            const button = document.createElement('button');
+            button.textContent = 'Copy';
+            button.style.position = 'absolute';
+            button.style.right = '1rem';
+            button.style.top = '0.5rem';
+            block.style.position = 'relative';
+            
+            block.appendChild(button);
+
+            button.addEventListener('click', async () => {
+                const code = block.querySelector('code').textContent;
+                await navigator.clipboard.writeText(code);
+                button.textContent = 'Copied!';
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                }, 2000);
+            });
+        });
+
+        // Theme toggle
+        const themeToggle = document.querySelector('.theme-toggle');
+        const root = document.documentElement;
+        
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        root.setAttribute('data-theme', savedTheme);
+        themeToggle.textContent = savedTheme === 'dark' ? '🌞 Light Mode' : '🌙 Dark Mode';
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = root.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            root.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update button text with emoji
+            themeToggle.textContent = newTheme === 'dark' ? '🌞 Light Mode' : '🌙 Dark Mode';
+        });
+    </script>
+</body>
+</html>
