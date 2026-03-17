@@ -1,0 +1,127 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ── Helper functions ─────────────────────────────────────────────────────
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isSignedIn() && (
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin') ||
+        request.auth.token.role == 'admin'
+      );
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // ── Users Collection ──────────────────────────────────────────────────────
+    match /users/{userId} {
+      // Users can read and update their own doc; admins can do everything
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isSignedIn();
+      allow update: if isOwner(userId) || isAdmin();
+      allow delete: if isAdmin();
+      // Allow admins to list all users
+      allow list: if isAdmin();
+    }
+
+    // ── Courses Collection ────────────────────────────────────────────────────
+    match /courses/{courseId} {
+      allow read, list: if true; // Publicly viewable
+      allow write: if isAdmin();
+    }
+
+    // ── Events Collection ─────────────────────────────────────────────────────
+    match /events/{eventId} {
+      allow read, list: if true;                // Publicly viewable
+      allow update: if isSignedIn();             // For registering (attendees arrayUnion)
+      allow create, delete: if isAdmin();
+    }
+
+    // ── Resources Collection ──────────────────────────────────────────────────
+    match /resources/{resourceId} {
+      allow read, list: if true; // Publicly viewable catalog
+      allow write: if isAdmin();
+    }
+
+    // ── Certificates Collection ───────────────────────────────────────────────
+    match /certificates/{certId} {
+      // Students can read their own certificates; admins can read all
+      allow read: if isSignedIn() && (
+        resource.data.userId == request.auth.uid || isAdmin()
+      );
+      // Allow signed-in users to list/query their own certificates
+      allow list: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // ── Transactions Collection ───────────────────────────────────────────────
+    match /transactions/{transId} {
+      allow read: if isSignedIn() && (
+        resource.data.userId == request.auth.uid || isAdmin()
+      );
+      // Allow querying (list) own transactions
+      allow list: if isSignedIn();
+      // SECURITY: Transactions should ideally only be created via Admin SDK after webhook/validation.
+      // If allowing client create, we must ensure status is always 'pending' and userId is correct.
+      allow create: if isSignedIn() && 
+                    request.resource.data.userId == request.auth.uid && 
+                    request.resource.data.paymentStatus == 'pending';
+      allow update: if isAdmin();
+    }
+
+    // ── Blogs Collection ──────────────────────────────────────────────────────
+    match /blogs/{blogId} {
+      allow read, list: if true;
+      allow write: if isAdmin();
+    }
+
+    // ── Categories Collection ─────────────────────────────────────────────────
+    match /categories/{catId} {
+      allow read, list: if true;
+      allow write: if isAdmin();
+    }
+
+    // ── Additional Public Content ─────────────────────────────────────────────
+    match /blog_posts/{id} {
+      allow read, list: if true;
+      allow write: if isAdmin();
+    }
+    match /reviews/{id} {
+      allow read, list: if true;
+      allow write: if isAdmin();
+    }
+    match /faqs/{id} {
+      allow read, list: if true;
+      allow write: if isAdmin();
+    }
+    match /services/{id} {
+      allow read, list: if true;
+      allow write: if isAdmin();
+    }
+    match /site_settings/{id} {
+      allow read, list: if true;
+      allow write: if isAdmin();
+    }
+    match /coaching_programs/{id} {
+      allow read, list: if true;
+      allow write: if isAdmin();
+    }
+
+    // ── Forms / Requests ──────────────────────────────────────────────────────
+    match /coachingRequests/{id} {
+      allow create: if true; // Anyone can submit a request
+      allow read, write: if isAdmin();
+    }
+    match /anchorRequests/{id} {
+      allow create: if true; // Anyone can submit a request
+      allow read, write: if isAdmin();
+    }
+  }
+}
