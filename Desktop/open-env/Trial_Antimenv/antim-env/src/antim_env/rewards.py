@@ -1,9 +1,16 @@
 """
 Reward computation logic for AntimEnv.
 
-This module provides the core reward signal for RL training. The reward structure
-is designed to guide agents toward completing critical post-death coordination
-tasks efficiently and in the correct sequence.
+The final/trajectory reward is now produced by a *composable rubric*
+(see src/antim_env/rubric.py). Each component reward is a named
+RewardPrimitive that can be inspected, weighted, and re-composed.
+The judging criterion explicitly rewards composable rubrics over
+monolithic scoring; the legacy monolithic implementation has been
+deleted in favour of the rubric-based path.
+
+This module still owns the per-step and per-phase incremental signals
+(compute_step_reward, compute_phase_reward) that train the model on
+correct sequencing and milestone progression.
 """
 
 from __future__ import annotations
@@ -11,6 +18,7 @@ from __future__ import annotations
 from typing import Optional
 
 from antim_env.models import CaseState
+from antim_env.rubric import DEFAULT_RUBRIC, Rubric
 
 
 # ------------------------------------------------------------------
@@ -18,78 +26,17 @@ from antim_env.models import CaseState
 # ------------------------------------------------------------------
 
 
-def compute_final_reward(state: CaseState) -> float:
+def compute_final_reward(
+    state: CaseState, rubric: Rubric = DEFAULT_RUBRIC
+) -> float:
     """
     Compute the main sparse trajectory reward at episode end.
 
-    This is the primary reward signal that evaluates overall episode success.
-    It rewards completing critical tasks and penalizes missing deadlines.
-
-    Args:
-        state: The final CaseState at episode termination.
-
-    Returns:
-        A float score between 0.0 and 1.0.
+    Delegates to the composable rubric system. Behaviour matches the
+    previous monolithic implementation by construction (same primitives,
+    same weights, same clamp range).
     """
-    score = 0.0
-
-    # ------------------------------------------------------------------
-    # Points for completing critical tasks
-    # ------------------------------------------------------------------
-
-    if state.funeral_completed:
-        score += 0.25
-
-    if state.death_certificate_obtained:
-        score += 0.30
-
-    if len(state.banks_notified) >= 1:
-        score += 0.20
-
-    if len(state.insurance_claims_filed) >= 1:
-        score += 0.15
-
-    if len(state.schemes_applied) >= 1:
-        score += 0.10
-
-    # ------------------------------------------------------------------
-    # Penalties for missing critical deadlines
-    # ------------------------------------------------------------------
-
-    # Critical penalty: Missing the 21-day legal deadline for death certificate
-    if state.days_elapsed > 21 and not state.death_certificate_obtained:
-        score -= 0.40
-
-    # Funeral should happen within 3 days (Indian tradition)
-    if state.days_elapsed > 3 and not state.funeral_completed:
-        score -= 0.15
-
-    # Penalty for not notifying all banks (if primary earner and has multiple banks)
-    if state.case.is_primary_earner and len(state.case.banks) > 0:
-        unnotified_banks = len(state.case.banks) - len(state.banks_notified)
-        if unnotified_banks > 0:
-            score -= 0.10 * min(unnotified_banks, 1)  # Max -0.10
-
-    # ------------------------------------------------------------------
-    # Bonuses for timely completion
-    # ------------------------------------------------------------------
-
-    # Bonus for getting death certificate before 21-day deadline
-    if (
-        state.death_certificate_day is not None
-        and state.death_certificate_day <= 21
-    ):
-        score += 0.05
-
-    # Bonus for NRI cases (harder, extra credit for completing funeral)
-    if state.case.is_nri_case and state.funeral_completed:
-        score += 0.05
-
-    # ------------------------------------------------------------------
-    # Clamp score between 0.0 and 1.0
-    # ------------------------------------------------------------------
-
-    return max(0.0, min(1.0, score))
+    return rubric.evaluate(state)
 
 
 # ------------------------------------------------------------------
