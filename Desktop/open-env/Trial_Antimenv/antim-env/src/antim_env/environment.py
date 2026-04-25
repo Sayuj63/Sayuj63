@@ -17,6 +17,13 @@ from antim_env.cases import load_random_case
 from antim_env.delays import DelaySimulator
 from antim_env.models import AntimAction, AntimObservation, CaseState, FamilyCase
 from antim_env.rewards import compute_final_reward, compute_phase_reward, compute_step_reward
+from antim_env.tools import (
+    TOOL_REGISTRY,
+    ToolValidationError,
+    list_tool_names,
+    list_tool_schemas,
+    validate_tool_params,
+)
 
 
 class AntimEnvironment(Environment):
@@ -88,7 +95,8 @@ class AntimEnvironment(Environment):
 
         self.prev_state = copy.deepcopy(self.state)
 
-        # Route to correct tool method
+        # Route to correct tool method.
+        # Each name MUST appear in TOOL_REGISTRY (single source of truth).
         tool_methods: Dict[str, Any] = {
             "get_case_context": self.get_case_context,
             "check_document_status": self.check_document_status,
@@ -101,19 +109,43 @@ class AntimEnvironment(Environment):
             "get_next_critical_deadline": self.get_next_critical_deadline,
             "advance_time": self.advance_time,
         }
+        # Cross-check: every implemented method has a typed schema, every
+        # registered schema has an implementation. Catches drift fast.
+        assert set(tool_methods.keys()) == set(TOOL_REGISTRY.keys()), (
+            "tool_methods drifted from TOOL_REGISTRY: "
+            f"{set(tool_methods) ^ set(TOOL_REGISTRY)}"
+        )
 
         tool = tool_methods.get(action.tool_name)
+        validation_error: Optional[str] = None
+
         if tool is None:
             result_msg = (
-                f"Unknown tool: {action.tool_name}. "
-                f"Available tools: {list(tool_methods.keys())}"
+                f"Unknown tool: {action.tool_name!r}. "
+                f"Available tools: {list_tool_names()}"
             )
         else:
+            # Validate parameters against the tool's Pydantic schema BEFORE
+            # dispatch. The Calendar-Gym Turing study found >50% of agent
+            # failures were malformed tool args — surfacing schema errors as
+            # clean observation messages teaches the model to fix them.
             try:
-                result_msg = tool(**action.parameters)
-                self.state.actions_taken.append(action.tool_name)
-            except Exception as e:
-                result_msg = f"Error executing {action.tool_name}: {str(e)}"
+                validated = validate_tool_params(
+                    action.tool_name, dict(action.parameters)
+                )
+            except ToolValidationError as exc:
+                validation_error = str(exc)
+                result_msg = (
+                    f"Schema validation failed for {action.tool_name}. "
+                    f"Inspect the JSON schema and resend.\n{validation_error}"
+                )
+            else:
+                try:
+                    result_msg = tool(**validated)
+                    self.state.actions_taken.append(action.tool_name)
+                except Exception as e:
+                    validation_error = f"runtime error: {e}"
+                    result_msg = f"Error executing {action.tool_name}: {e}"
 
         # Compute rewards
         step_reward = compute_step_reward(self.prev_state, self.state, action.tool_name)
@@ -136,9 +168,20 @@ class AntimEnvironment(Environment):
             reward=total_reward,
             done=done,
             phase=self.state.current_phase,
+            error=validation_error,
         )
 
         return obs
+
+    # ------------------------------------------------------------------
+    # Tool-discovery helpers (exposed via the HTTP /tools endpoint and used
+    # by the system prompt generator + tests).
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def list_tools() -> list[dict[str, Any]]:
+        """Return MCP-style {name, description, parameters} for all tools."""
+        return list_tool_schemas()
 
     # ------------------------------------------------------------------
     # Tool Methods
