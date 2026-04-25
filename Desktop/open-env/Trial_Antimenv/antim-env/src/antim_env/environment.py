@@ -1,0 +1,483 @@
+"""
+Core AntimEnvironment class for post-death coordination RL training.
+
+This module implements the main environment that agents interact with,
+providing tools for navigating bureaucratic workflows in India.
+"""
+
+from __future__ import annotations
+
+import copy
+from dataclasses import replace
+from typing import Any, Dict, Optional
+
+from openenv.core import Environment, State
+
+from antim_env.cases import load_random_case
+from antim_env.delays import DelaySimulator
+from antim_env.models import AntimAction, AntimObservation, CaseState, FamilyCase
+from antim_env.rewards import compute_final_reward, compute_phase_reward, compute_step_reward
+
+
+class AntimEnvironment(Environment):
+    """
+    OpenEnv-compatible environment for post-death coordination workflows in India.
+
+    Agents navigate through funeral arrangements, death certificates, bank
+    notifications, insurance claims, and government scheme applications.
+    """
+
+    SUPPORTS_CONCURRENT_SESSIONS = True
+
+    def __init__(self) -> None:
+        """Initialize the environment."""
+        self._state: Optional[CaseState] = None
+        self.case: Optional[FamilyCase] = None
+        self.delay_sim = DelaySimulator()
+        self.prev_state: Optional[CaseState] = None
+
+    @property
+    def state(self) -> Optional[CaseState]:
+        """Get the current case state."""
+        return self._state
+
+    @state.setter
+    def state(self, value: Optional[CaseState]) -> None:
+        """Set the current case state."""
+        self._state = value
+
+    def reset(self, case_id: Optional[str] = None, **kwargs: Any) -> AntimObservation:
+        """
+        Reset environment to a new family case.
+
+        Args:
+            case_id: Optional specific case ID. If None, loads a random case.
+            **kwargs: Additional arguments (ignored).
+
+        Returns:
+            Initial observation for the new episode.
+        """
+        self.case = load_random_case(case_id)
+        self.state = CaseState(case=self.case)
+        self.prev_state = None
+
+        return AntimObservation(
+            message=(
+                f"New case: {self.case.deceased_name}, age {self.case.deceased_age}, "
+                f"passed away in {self.case.city} due to {self.case.cause_of_death}. "
+                f"The family needs your coordination help. Start by assessing the situation."
+            ),
+            case_summary=self.state.to_summary(),
+            days_elapsed=0,
+            urgent_deadline="Funeral arrangements needed within 24-48 hours",
+            phase="farewell",
+        )
+
+    def step(self, action: AntimAction) -> AntimObservation:
+        """
+        Execute one coordination action.
+
+        Args:
+            action: AntimAction with tool_name and parameters.
+
+        Returns:
+            AntimObservation with message, case summary, and reward.
+        """
+        if self.state is None:
+            raise RuntimeError("Call reset() before step()")
+
+        self.prev_state = copy.deepcopy(self.state)
+
+        # Route to correct tool method
+        tool_methods: Dict[str, Any] = {
+            "get_case_context": self.get_case_context,
+            "check_document_status": self.check_document_status,
+            "book_funeral_service": self.book_funeral_service,
+            "submit_death_certificate_application": self.submit_death_certificate_application,
+            "notify_bank": self.notify_bank,
+            "file_insurance_claim": self.file_insurance_claim,
+            "check_government_scheme_eligibility": self.check_government_scheme_eligibility,
+            "escalate_delay": self.escalate_delay,
+            "get_next_critical_deadline": self.get_next_critical_deadline,
+            "advance_time": self.advance_time,
+        }
+
+        tool = tool_methods.get(action.tool_name)
+        if tool is None:
+            result_msg = (
+                f"Unknown tool: {action.tool_name}. "
+                f"Available tools: {list(tool_methods.keys())}"
+            )
+        else:
+            try:
+                result_msg = tool(**action.parameters)
+                self.state.actions_taken.append(action.tool_name)
+            except Exception as e:
+                result_msg = f"Error executing {action.tool_name}: {str(e)}"
+
+        # Compute rewards
+        step_reward = compute_step_reward(self.prev_state, self.state, action.tool_name)
+        phase_reward = compute_phase_reward(self.prev_state, self.state)
+
+        done = self.state.is_terminal()
+        if done:
+            final_reward = compute_final_reward(self.state)
+            total_reward = final_reward
+        else:
+            total_reward = step_reward + phase_reward
+
+        self.state.last_reward = total_reward
+
+        obs = AntimObservation(
+            message=result_msg,
+            case_summary=self.state.to_summary(),
+            days_elapsed=self.state.days_elapsed,
+            urgent_deadline=self.state.get_next_deadline(),
+            reward=total_reward,
+            done=done,
+            phase=self.state.current_phase,
+        )
+
+        return obs
+
+    # ------------------------------------------------------------------
+    # Tool Methods
+    # ------------------------------------------------------------------
+
+    def get_case_context(self) -> str:
+        """
+        Return detailed case information in a structured format.
+
+        Returns:
+            A formatted string with all case details.
+        """
+        assert self.state is not None
+        case = self.state.case
+
+        return (
+            f"CASE CONTEXT:\n"
+            f"  Case ID: {case.case_id}\n"
+            f"  Deceased: {case.deceased_name}, age {case.deceased_age}\n"
+            f"  Location: {case.city}\n"
+            f"  Cause of Death: {case.cause_of_death}\n"
+            f"  Complexity: {case.complexity}\n"
+            f"\nFAMILY SITUATION:\n"
+            f"  Primary Earner: {case.is_primary_earner}\n"
+            f"  Dependents: {case.dependents}\n"
+            f"  Has Will: {case.has_will}\n"
+            f"\nFINANCIAL ACCOUNTS:\n"
+            f"  Banks: {', '.join(case.banks)}\n"
+            f"  Insurance Policies: {', '.join(case.insurance_policies) if case.insurance_policies else 'None'}\n"
+            f"  Outstanding Loan: {case.has_outstanding_loan}\n"
+            f"\nGOVERNMENT SCHEMES:\n"
+            f"  Eligible: {', '.join(case.government_schemes_eligible) if case.government_schemes_eligible else 'None'}\n"
+            f"\nSPECIAL CIRCUMSTANCES:\n"
+            f"  NRI Case: {case.is_nri_case}\n"
+            f"  Municipality Delay: {case.municipality_delay_days} days\n"
+        )
+
+    def check_document_status(self, document_type: str) -> str:
+        """
+        Check if a document is available.
+
+        Args:
+            document_type: One of "death_slip", "death_certificate", "aadhaar",
+                          "pan", "will", "insurance_policy".
+
+        Returns:
+            Status string for the document.
+        """
+        assert self.state is not None
+
+        if document_type == "death_slip":
+            status = "✓ Available" if self.state.death_slip_obtained else "✗ Not yet obtained"
+            return f"Death Slip: {status}\n(Available after funeral completion)"
+
+        elif document_type == "death_certificate":
+            if self.state.death_certificate_obtained:
+                return f"Death Certificate: ✓ Obtained on day {self.state.death_certificate_day}"
+            elif self.state.death_certificate_applied:
+                return "Death Certificate: ⏳ Application submitted, awaiting processing"
+            else:
+                return "Death Certificate: ✗ Not yet applied for"
+
+        elif document_type == "aadhaar":
+            return "Aadhaar: ✓ Available (standard ID for all Indian citizens)"
+
+        elif document_type == "pan":
+            return "PAN: ✓ Available (if deceased had income tax filing)"
+
+        elif document_type == "will":
+            status = "✓ Available" if self.state.case.has_will else "✗ Not registered"
+            return f"Will: {status}"
+
+        elif document_type == "insurance_policy":
+            if self.state.case.insurance_policies:
+                return f"Insurance Policies: ✓ {len(self.state.case.insurance_policies)} policies found"
+            else:
+                return "Insurance Policies: ✗ None found in case records"
+
+        else:
+            return f"Unknown document type: {document_type}"
+
+    def book_funeral_service(self, vendor_id: str, slot_time: str) -> str:
+        """
+        Book funeral service with a vendor.
+
+        Args:
+            vendor_id: Identifier for the funeral service vendor.
+            slot_time: Time slot for the funeral (e.g., "10:00 AM").
+
+        Returns:
+            Confirmation message.
+        """
+        assert self.state is not None
+
+        if self.state.funeral_completed:
+            return "Funeral already completed. Cannot book another service."
+
+        self.state.funeral_completed = True
+        self.state.days_elapsed += 1
+        self.state.death_slip_obtained = True
+
+        # Update phase
+        if self.state.days_elapsed >= 3:
+            self.state.current_phase = "closure"
+
+        return (
+            f"✓ Funeral service booked successfully!\n"
+            f"  Vendor: {vendor_id}\n"
+            f"  Time: {slot_time}\n"
+            f"  Death slip obtained from hospital.\n"
+            f"  Next step: Apply for death certificate at municipality."
+        )
+
+    def submit_death_certificate_application(self, municipality_id: str) -> str:
+        """
+        Submit death certificate application to municipality.
+
+        Args:
+            municipality_id: Identifier for the municipality office.
+
+        Returns:
+            Municipality response with processing timeline.
+        """
+        assert self.state is not None
+
+        if self.state.death_certificate_applied:
+            return "Death certificate application already submitted."
+
+        if not self.state.funeral_completed:
+            return (
+                "Funeral must be completed before applying for death certificate. "
+                "Book funeral service first."
+            )
+
+        self.state.death_certificate_applied = True
+
+        # Get municipality response
+        response = self.delay_sim.get_municipality_response(
+            self.state.case.city, self.state.case.municipality_delay_days
+        )
+
+        # If immediate (0 days), obtain certificate immediately
+        if self.state.case.municipality_delay_days == 0:
+            self.state.death_certificate_obtained = True
+            self.state.death_certificate_day = self.state.days_elapsed
+
+        return response
+
+    def notify_bank(self, bank_id: str, account_type: str = "savings") -> str:
+        """
+        Notify a bank of the death.
+
+        Args:
+            bank_id: Bank name (e.g., "SBI", "HDFC").
+            account_type: Type of account ("savings", "fd", "locker", "loan").
+
+        Returns:
+            Bank response with next steps.
+        """
+        assert self.state is not None
+
+        if bank_id not in self.state.case.banks:
+            return f"Bank '{bank_id}' not found in case records."
+
+        if bank_id in self.state.banks_notified:
+            return f"Bank '{bank_id}' already notified."
+
+        # Get bank response
+        response = self.delay_sim.get_bank_response(
+            bank_id, account_type, self.state.death_certificate_obtained
+        )
+
+        # Add to notified list if certificate is available
+        if self.state.death_certificate_obtained:
+            self.state.banks_notified.append(bank_id)
+            # Update phase if this is the first bank
+            if len(self.state.banks_notified) == 1 and self.state.current_phase == "closure":
+                self.state.current_phase = "continuity"
+
+        return response
+
+    def file_insurance_claim(self, policy_id: str, claim_type: str = "death") -> str:
+        """
+        File an insurance claim.
+
+        Args:
+            policy_id: Insurance policy ID.
+            claim_type: Type of claim ("death", "accident", etc.).
+
+        Returns:
+            Insurance company response with requirements.
+        """
+        assert self.state is not None
+
+        if policy_id not in self.state.case.insurance_policies:
+            return f"Policy '{policy_id}' not found in case records."
+
+        if policy_id in self.state.insurance_claims_filed:
+            return f"Claim already filed for policy '{policy_id}'."
+
+        # Determine if accident
+        is_accident = self.state.case.cause_of_death == "accident"
+
+        # Get insurance response
+        response = self.delay_sim.get_insurance_response(
+            "life", self.state.death_certificate_obtained, is_accident
+        )
+
+        # Add to filed list if certificate is available
+        if self.state.death_certificate_obtained:
+            self.state.insurance_claims_filed.append(policy_id)
+
+        return response
+
+    def check_government_scheme_eligibility(self, scheme_name: str) -> str:
+        """
+        Check eligibility and apply for a government scheme.
+
+        Args:
+            scheme_name: Name of the government scheme.
+
+        Returns:
+            Scheme eligibility and application information.
+        """
+        assert self.state is not None
+
+        if scheme_name not in self.state.case.government_schemes_eligible:
+            return (
+                f"Family does not appear eligible for scheme '{scheme_name}' "
+                f"based on case data."
+            )
+
+        if scheme_name in self.state.schemes_applied:
+            return f"Already applied for scheme '{scheme_name}'."
+
+        # Get scheme response
+        response = self.delay_sim.get_scheme_response(
+            scheme_name, self.state.case.is_primary_earner
+        )
+
+        # Add to applied list
+        self.state.schemes_applied.append(scheme_name)
+
+        return response
+
+    def escalate_delay(self, office_id: str, reason: str) -> str:
+        """
+        Escalate a delay through grievance mechanism.
+
+        Args:
+            office_id: ID of the office causing delay.
+            reason: Reason for escalation.
+
+        Returns:
+            Escalation confirmation with grievance number.
+        """
+        assert self.state is not None
+
+        # Generate grievance number
+        grievance_num = f"GRV-{self.state.case.case_id[:8]}-{len(self.state.actions_taken)}"
+
+        # Reduce municipality delay
+        self.state.case.municipality_delay_days = max(
+            0, self.state.case.municipality_delay_days - 2
+        )
+
+        return (
+            f"✓ Grievance escalated successfully!\n"
+            f"  Grievance Number: {grievance_num}\n"
+            f"  Office: {office_id}\n"
+            f"  Reason: {reason}\n"
+            f"  Expected Resolution: 7 working days\n"
+            f"  Toll-free Helpline: 1800-ANTIM-01\n"
+            f"  Municipality delay reduced by 2 days."
+        )
+
+    def get_next_critical_deadline(self) -> str:
+        """
+        Get the next critical deadline with legal consequences.
+
+        Returns:
+            Detailed deadline information with consequences.
+        """
+        assert self.state is not None
+
+        deadline = self.state.get_next_deadline()
+
+        consequences = (
+            f"\n\n⚠️ LEGAL CONSEQUENCES:\n"
+            f"  • Death Certificate: Legal fine of Rs 50/day after 21 days\n"
+            f"  • Bank Notification: Accounts may be frozen without proper process\n"
+            f"  • Insurance Claim: Most policies have 90-day filing limit\n"
+            f"  • Government Schemes: Eligibility may expire after 6 months\n"
+        )
+
+        return deadline + consequences
+
+    def advance_time(self, days: int) -> str:
+        """
+        Advance simulated time by specified days.
+
+        Args:
+            days: Number of days to advance (1-7).
+
+        Returns:
+            Summary of what happened during the time period.
+        """
+        assert self.state is not None
+
+        if days < 1 or days > 7:
+            return "Can only advance 1-7 days at a time."
+
+        self.state.days_elapsed += days
+
+        # Check if death certificate delay has passed
+        if (
+            self.state.death_certificate_applied
+            and not self.state.death_certificate_obtained
+        ):
+            if self.state.days_elapsed >= self.state.case.municipality_delay_days:
+                self.state.death_certificate_obtained = True
+                self.state.death_certificate_day = self.state.days_elapsed
+
+        # Update phase based on days elapsed
+        if self.state.days_elapsed <= 2:
+            self.state.current_phase = "farewell"
+        elif self.state.days_elapsed <= 21:
+            self.state.current_phase = "closure"
+        else:
+            self.state.current_phase = "continuity"
+
+        summary = f"⏰ Time advanced by {days} days (now day {self.state.days_elapsed})\n"
+
+        if (
+            self.state.death_certificate_obtained
+            and self.state.death_certificate_day == self.state.days_elapsed
+        ):
+            summary += "✓ Death certificate is now ready for collection!\n"
+
+        summary += f"Current phase: {self.state.current_phase}"
+
+        return summary
