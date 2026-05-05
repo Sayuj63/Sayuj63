@@ -1,0 +1,147 @@
+
+<h2 class="sr-only">Post-Purchase Retention Intelligence App concept for D2C Shopify brands</h2>
+<style>
+  .app-shell { padding: 1.5rem 0; font-family: var(--font-sans); }
+  .app-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.75rem; }
+  .app-logo { width: 40px; height: 40px; border-radius: var(--border-radius-md); background: #3C3489; display: flex; align-items: center; justify-content: center; }
+  .logo-mark { width: 20px; height: 20px; fill: #EEEDFE; }
+  .app-name { font-size: 16px; font-weight: 500; color: var(--color-text-primary); }
+  .app-tagline { font-size: 13px; color: var(--color-text-secondary); margin-top: 2px; }
+  .metrics-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1.5rem; }
+  .metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 14px 16px; }
+  .metric-label { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px; }
+  .metric-value { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+  .metric-sub { font-size: 12px; margin-top: 3px; }
+  .green { color: #3B6D11; }
+  .section-title { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.04em; margin: 1.5rem 0 0.75rem; }
+  .pillars { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
+  .pillar { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; }
+  .pillar-icon { width: 28px; height: 28px; border-radius: var(--border-radius-md); display: flex; align-items: center; justify-content: center; margin-bottom: 10px; font-size: 14px; }
+  .pi-purple { background: #EEEDFE; }
+  .pi-teal { background: #E1F5EE; }
+  .pi-amber { background: #FAEEDA; }
+  .pi-coral { background: #FAECE7; }
+  .pillar-name { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 5px; }
+  .pillar-desc { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+  .timeline { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; }
+  .timeline-row { display: flex; align-items: flex-start; gap: 14px; padding: 14px 16px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .timeline-row:last-child { border-bottom: none; }
+  .t-badge { min-width: 52px; font-size: 11px; font-weight: 500; border-radius: 20px; padding: 3px 8px; text-align: center; }
+  .t-0h { background: #EEEDFE; color: #3C3489; }
+  .t-2h { background: #E1F5EE; color: #085041; }
+  .t-24h { background: #FAEEDA; color: #633806; }
+  .t-72h { background: #FAECE7; color: #712B13; }
+  .t-7d { background: #EAF3DE; color: #27500A; }
+  .t-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 2px; }
+  .t-desc { font-size: 12px; color: var(--color-text-secondary); line-height: 1.45; }
+  .cta-row { display: flex; gap: 10px; margin-top: 1.5rem; }
+  .cta-btn { flex: 1; padding: 10px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; font-size: 13px; cursor: pointer; color: var(--color-text-primary); text-align: center; }
+  .cta-primary { background: #3C3489; color: #EEEDFE; border-color: transparent; font-weight: 500; }
+</style>
+
+<div class="app-shell">
+  <div class="app-header">
+    <div class="app-logo">
+      <svg class="logo-mark" viewBox="0 0 20 20"><circle cx="10" cy="10" r="4"/><circle cx="10" cy="10" r="8" fill="none" stroke="#EEEDFE" stroke-width="1.5" stroke-dasharray="3 2"/></svg>
+    </div>
+    <div>
+      <div class="app-name">RetainIQ Pro</div>
+      <div class="app-tagline">Post-purchase intelligence for Shopify D2C brands</div>
+    </div>
+  </div>
+
+  <div class="metrics-row">
+    <div class="metric">
+      <div class="metric-label">Avg. repeat rate lift</div>
+      <div class="metric-value">+34%</div>
+      <div class="metric-sub green">vs. no retention tool</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">LTV improvement</div>
+      <div class="metric-value">2.1x</div>
+      <div class="metric-sub green">in 6 months</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Setup time</div>
+      <div class="metric-value">&lt;1 hr</div>
+      <div class="metric-sub" style="color:var(--color-text-secondary)">plug & play flows</div>
+    </div>
+  </div>
+
+  <div class="section-title">Core pillars</div>
+  <div class="pillars">
+    <div class="pillar">
+      <div class="pillar-icon pi-purple">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1L9 5H13L10 8L11 13L7 10L3 13L4 8L1 5H5L7 1Z" fill="#534AB7"/></svg>
+      </div>
+      <div class="pillar-name">Behavioral scoring</div>
+      <div class="pillar-desc">Assigns a churn-risk score within 2 hrs of purchase using browsing depth, cart adds, and AOV signals.</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon pi-teal">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="9" rx="2" stroke="#0F6E56" stroke-width="1.2" fill="none"/><path d="M5 3V2M9 3V2" stroke="#0F6E56" stroke-width="1.2" stroke-linecap="round"/><path d="M4 7H10M4 9.5H8" stroke="#0F6E56" stroke-width="1" stroke-linecap="round"/></svg>
+      </div>
+      <div class="pillar-name">Smart sequencing</div>
+      <div class="pillar-desc">Auto-triggers whatsapp, sms, or email flows timed to each customer's replenishment window.</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon pi-amber">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#854F0B" stroke-width="1.2" fill="none"/><path d="M7 4V7L9 9" stroke="#854F0B" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="pillar-name">Replenishment AI</div>
+      <div class="pillar-desc">Predicts exact reorder date per SKU per customer using past purchase cadence + product type.</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon pi-coral">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2C4.24 2 2 4.24 2 7C2 9.76 4.24 12 7 12C9.76 12 12 9.76 12 7" stroke="#993C1D" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M9 2L12 5M12 2L9 5" stroke="#993C1D" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="pillar-name">Review loop</div>
+      <div class="pillar-desc">Captures UGC and NPS at the peak satisfaction moment — not 30 days later when sentiment fades.</div>
+    </div>
+  </div>
+
+  <div class="section-title">Post-purchase journey</div>
+  <div class="timeline">
+    <div class="timeline-row">
+      <span class="t-badge t-0h">0 hr</span>
+      <div>
+        <div class="t-title">Order confirmation + unboxing prep</div>
+        <div class="t-desc">Branded tracking page with "what to expect" content. No generic Shopify email.</div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <span class="t-badge t-2h">2 hr</span>
+      <div>
+        <div class="t-title">Churn risk flagged</div>
+        <div class="t-desc">AI scores the customer. High-risk = discount offer queued. Low-risk = referral nudge queued.</div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <span class="t-badge t-24h">24 hr</span>
+      <div>
+        <div class="t-title">Usage tip + community invite</div>
+        <div class="t-desc">Product education to reduce returns and build habit. WhatsApp preferred over email.</div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <span class="t-badge t-72h">72 hr</span>
+      <div>
+        <div class="t-title">Review + UGC capture</div>
+        <div class="t-desc">Sentiment is highest here. Auto-route 5-star reviews to Google/Meta, 3-star to support.</div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <span class="t-badge t-7d">Day N</span>
+      <div>
+        <div class="t-title">Replenishment reminder</div>
+        <div class="t-desc">Personalized reorder nudge based on predicted finish date. One-tap reorder via WhatsApp.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-row">
+    <button class="cta-btn" onclick="sendPrompt('What would be the monetization model for this app?')">Monetisation model ↗</button>
+    <button class="cta-btn" onclick="sendPrompt('Who are the existing competitors for this retention app idea?')">Existing competitors ↗</button>
+    <button class="cta-btn cta-primary" onclick="sendPrompt('How do I build an MVP of this Shopify retention app?')">Build the MVP ↗</button>
+  </div>
+</div>

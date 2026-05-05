@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f7f7ff;
+  --foreground: #11111a;
+  --brand: #3c3489;
+  --brand-muted: #ccc9f0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #11111a;
+    --foreground: #f7f7ff;
+    --brand-muted: #4a4470;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+}
