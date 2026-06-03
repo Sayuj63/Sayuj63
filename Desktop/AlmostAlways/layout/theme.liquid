@@ -1,0 +1,309 @@
+<!doctype html>
+<html
+	class="no-js"
+	data-scheme="{{ settings.color_scheme }}"
+	lang="{{ request.locale.iso_code }}"
+>
+	<head>
+		<meta name="facebook-domain-verification" content="iz4k5d346coivfq6me8c7vidqkztlc" />
+		<meta name="google-site-verification" content="tCoBK_FC7aGaCzvSVZwaXSgLFD-PkAhgCg8Buk9effE" />
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<meta name="theme-color" content="">
+		<link rel="canonical" href="{{ canonical_url }}">
+		<link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+
+		{%- if settings.favicon != blank -%}
+			<link
+				rel="icon"
+				type="image/png"
+				href="{{ settings.favicon | img_url: '32x32' }}"
+			>
+		{%- endif -%}
+
+		{%- unless settings.type_header_font.system? -%}
+			<link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+		{%- endunless -%}
+
+		<title>{{ page_title }}</title>
+
+		{% if page_description %}
+			<meta name="description" content="{{ page_description | escape }}">
+		{% endif %}
+
+		{% render 'meta-tags' %}
+
+		<script src="{{ 'constants.js' | asset_url }}" defer="defer"></script>
+		<script src="{{ 'pubsub.js' | asset_url }}" defer="defer"></script>
+		<script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
+		{%- if settings.quickview_enable -%}
+			<script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
+			<script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+		{% endif %}
+
+		{{ content_for_header }}
+		
+		{% render 'vars' %}
+		
+		{{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
+		{{ 'base.css' | asset_url | stylesheet_tag }}
+		{{ 'aa-colour-swatches.css' | asset_url | stylesheet_tag }}
+
+		{%- if settings.predictive_search_enabled -%}
+			<link
+				rel="stylesheet"
+				href="{{ 'component-predictive-search.css' | asset_url }}"
+				media="print"
+				onload="this.media='all'"
+			>
+		{%- endif -%}
+
+		{%- unless settings.type_body_font.system? -%}
+			<link
+				rel="preload"
+				as="font"
+				href="{{ settings.type_body_font | font_url }}"
+				type="font/woff2"
+				crossorigin
+			>
+		{%- endunless -%}
+		{%- unless settings.type_header_font.system? -%}
+			<link
+				rel="preload"
+				as="font"
+				href="{{ settings.type_header_font | font_url }}"
+				type="font/woff2"
+				crossorigin
+			>
+		{%- endunless -%}
+
+		<script>
+			document.documentElement.className =
+				document.documentElement.className.replace('no-js', 'js');
+			if (Shopify.designMode) {
+				document.documentElement.classList.add('shopify-design-mode');
+			}
+		</script>
+
+		<script src="{{ 'jquery-3.6.0.js' | asset_url }}" defer="defer"></script>
+		<script
+			src="{{ 'swiper-bundle.min.js' | asset_url }}"
+			defer="defer"
+		></script>
+		<script src="{{ 'gsap.min.js' | asset_url }}" defer="defer"></script>
+		<script
+			src="{{ 'ScrollTrigger.min.js' | asset_url }}"
+			defer="defer"
+		></script>
+		{%- if request.page_type != 'search' and settings.enable_search_modal -%}
+			<script src="{{ 'search-modal.js' | asset_url }}" defer="defer"></script>
+		{%- endif -%}
+		<script src="{{ 'popup.js' | asset_url }}" defer="defer"></script>
+		{% if settings.show_back_to_top %}
+			<script src="{{ 'scroll-top.js' | asset_url }}" defer="defer"></script>
+		{% endif %}
+		{% if settings.type_color_swatch == 'custom' %}
+			<script src="{{ 'product-card.js' | asset_url }}" defer="defer"></script>
+		{% endif %}
+		<script src="{{ 'aa-colour-swatches.js' | asset_url }}" defer="defer"></script>
+
+		<script>
+			let cscoDarkMode = {};
+
+			(function () {
+				const body = document.querySelector('html[data-scheme]');
+
+				cscoDarkMode = {
+					init: function (e) {
+						this.initMode(e);
+						window
+							.matchMedia('(prefers-color-scheme: dark)')
+							.addListener((e) => {
+								this.initMode(e);
+							});
+
+						window.addEventListener('load', () => {
+							document.querySelectorAll('.header__toggle-scheme').forEach(el => {
+								el.addEventListener('click', (e) => {
+									e.preventDefault();
+									if ('auto' === body.getAttribute('data-scheme')) {
+										if (
+											window.matchMedia('(prefers-color-scheme: dark)').matches
+										) {
+											cscoDarkMode.changeScheme('light', true);
+										} else if (
+											window.matchMedia('(prefers-color-scheme: light)').matches
+										) {
+											cscoDarkMode.changeScheme('dark', true);
+										}
+									} else {
+										if ('dark' === body.getAttribute('data-scheme')) {
+											cscoDarkMode.changeScheme('light', true);
+										} else {
+											cscoDarkMode.changeScheme('dark', true);
+										}
+									}
+								});
+							})
+						});
+					},
+					initMode: function (e) {
+						let siteScheme = false;
+						switch (
+							'{{ settings.color_scheme }}' // Field. User’s system preference.
+						) {
+							case 'dark':
+								siteScheme = 'dark';
+								break;
+							case 'light':
+								siteScheme = 'light';
+								break;
+							case 'system':
+								siteScheme = 'auto';
+								break;
+						}
+						if (siteScheme && siteScheme !== body.getAttribute('data-scheme')) {
+							this.changeScheme(siteScheme, false);
+						}
+					},
+					changeScheme: function (siteScheme, cookie) {
+						body.classList.add('scheme-toggled');
+						body.setAttribute('data-scheme', siteScheme);
+						if (cookie) {
+							localStorage.setItem('_color_schema', siteScheme);
+						}
+						setTimeout(() => {
+							body.classList.remove('scheme-toggled');
+						}, 100);
+					},
+				};
+			})();
+
+			cscoDarkMode.init();
+
+			document.addEventListener('shopify:section:load', function () {
+				setTimeout(() => {
+					cscoDarkMode.init();
+				}, 100);
+			});
+		</script>
+	</head>
+
+	<body   class="body-template-{{ template.name }} body-template-{{ template | replace: '.', '-' }} template-{{ template.name }} template-{{ template | replace: '.', '-' }} {% if collection %}
+collection-{{ collection.handle }}
+{% elsif product %}
+  product-{{ product.handle }}
+{% elsif page %}
+  page-{{ page.handle }}
+{% endif %}
+">
+		<a class="skip-to-content-link button visually-hidden button--simple" href="#MainContent">
+			{{ 'accessibility.skip_to_text' | t }}
+		</a>
+
+		{% sections 'header-group' %}
+		{% sections 'overlay-group' %}
+		{% if settings.show_breadcrumbs %}
+			{% render 'breadcrumbs' %}
+		{% endif %}
+		<main
+			id="MainContent"
+			class="content-for-layout focus-none"
+			role="main"
+			tabindex="-1"
+		>
+			{{ content_for_layout }}
+		</main>
+		{% sections 'footer-group' %}
+
+		{% if settings.show_back_to_top %}
+			{% render 'scroll-top' %}
+		{% endif %}
+		{% if settings.enable_search_modal %}
+			{% render 'search-modal' %}
+		{% endif %}
+		{%- if request.page_type != 'cart' and settings.cart_type == 'drawer' -%}
+			{%- render 'cart-drawer' -%}
+		{%- endif -%}
+
+		<ul hidden>
+			<li id="a11y-refresh-page-message">
+				{{ 'accessibility.refresh_page' | t }}
+			</li>
+		</ul>
+
+		<script>
+			{% capture content %}{% include 'quickview' %}{% endcapture %}
+			let content = {{ content | json }};
+		</script>
+
+		<script>
+			window.routes = {
+				cart_add_url: '{{ routes.cart_add_url }}',
+				cart_change_url: '{{ routes.cart_change_url }}',
+				cart_update_url: '{{ routes.cart_update_url }}',
+				cart_url: '{{ routes.cart_url }}',
+				predictive_search_url: '{{ routes.predictive_search_url }}'
+			};
+
+			window.cartStrings = {
+				error: `{{ 'sections.cart.cart_error' | t }}`,
+				quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t }}`,
+				empty: `{{ 'general.cart.empty_cart' | t }}`,
+				shop_now: `{{ 'customer.account.account_button_shop' | t }}`,
+				collections_url: `{{ routes.collections_url | sort_by: 'best-selling' }}`
+			}
+
+			window.variantStrings = {
+				addToCart: `{{ 'products.product.add_to_cart' | t }}`,
+				soldOut: `{{ 'products.product.sold_out' | t }}`,
+				unavailable: `{{ 'products.product.unavailable' | t }}`,
+				unavailable_with_option: `{{ 'products.product.value_unavailable' | t: option_value: '[value]' }}`
+			}
+
+			window.theme = {
+				moneyFormat: {{ shop.money_format | json }},
+				quickviewText: `{{ settings.quickview }}`,
+				quickviewMore: `{{ 'general.card.view__more' | t }}`
+			}
+		</script>
+
+		{%- if settings.predictive_search_enabled -%}
+			<script src="{{ 'search-form.js' | asset_url }}" defer="defer"></script>
+			<script
+				src="{{ 'predictive-search.js' | asset_url }}"
+				defer="defer"
+			></script>
+		{%- endif -%}
+
+		<script>
+			if (
+				window.Shopify &&
+				window.Shopify.theme &&
+				navigator &&
+				navigator.sendBeacon &&
+				window.Shopify.designMode
+			) {
+				const themeKey = `dataSent_{{ theme.name }}`
+				if (!localStorage.getItem(themeKey)) {
+					navigator.sendBeacon(
+						'https://cdn.ashstonestudios.com/shopify-beacon/sent/',
+						new URLSearchParams({
+							shop: window.Shopify.shop,
+							role: window.Shopify.theme.role,
+							route: window.location.pathname,
+							themeId: window.Shopify.theme.id,
+							themeStoreId: window.Shopify.theme.theme_store_id || 0,
+							isThemeEditor: !!window.Shopify.designMode,
+							themeName: '{{ theme.name }}',
+							shopName: '{{ shop.name }}',
+							shopEmail: '{{ shop.email }}',
+						})
+					)
+					localStorage.setItem(themeKey, 'true')
+				}
+			}
+		</script>
+	</body>
+</html>

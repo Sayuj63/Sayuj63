@@ -1,0 +1,161 @@
+/* ============================================================
+   Almost Always — cross-SKU colour swatches
+   Used on:
+     - Product page (.aa-colour-swatches--product) → 30px circles
+     - Collection card (.aa-colour-swatches--card)  → 18px dots
+   ============================================================ */
+
+.aa-colour-swatches {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	box-sizing: border-box;
+}
+
+.aa-colour-swatches:empty {
+	display: none;
+}
+
+/* ---------- Product page (30px) ---------- */
+.aa-colour-swatches--product {
+	gap: 8px;
+	margin: 1.2rem 0 1.6rem;
+	min-height: 30px;
+}
+
+.aa-colour-swatches--product .aa-swatch {
+	width: 44px;
+	height: 44px;
+	padding: 7px;
+}
+
+.aa-colour-swatches--product .aa-swatch__dot {
+	width: 30px;
+	height: 30px;
+}
+
+/* ---------- Collection card (18px) ---------- */
+.aa-colour-swatches--card {
+	gap: 4px;
+	margin-top: 0.6rem;
+}
+
+.aa-colour-swatches--card .aa-swatch {
+	width: 24px;
+	height: 24px;
+	padding: 3px;
+}
+
+.aa-colour-swatches--card .aa-swatch__dot {
+	width: 18px;
+	height: 18px;
+}
+
+.aa-colour-swatches--card .aa-swatch-more {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 18px;
+	min-width: 18px;
+	padding: 0 4px;
+	font-size: 1.05rem;
+	line-height: 1;
+	color: #555;
+	letter-spacing: 0.02em;
+	user-select: none;
+}
+
+/* ---------- Shared swatch element ---------- */
+.aa-swatch {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	background: none;
+	border: 0;
+	cursor: pointer;
+	border-radius: 50%;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.aa-swatch:focus {
+	outline: none;
+}
+
+.aa-swatch:focus-visible .aa-swatch__dot {
+	box-shadow: 0 0 0 2px #fff, 0 0 0 4px #111111;
+}
+
+.aa-swatch__dot {
+	display: block;
+	border-radius: 50%;
+	background-color: var(--aa-swatch-color, #ccc);
+	border: 1.5px solid transparent;
+	transition: transform 0.15s ease, box-shadow 0.15s ease;
+	box-sizing: border-box;
+}
+
+.aa-swatch--light .aa-swatch__dot {
+	border-color: #D1D5DB;
+}
+
+.aa-swatch:hover .aa-swatch__dot {
+	transform: scale(1.12);
+}
+
+/* Active state — current page colour */
+.aa-colour-swatches--product .aa-swatch--active .aa-swatch__dot {
+	box-shadow: 0 0 0 2px #fff, 0 0 0 4px #111111;
+}
+
+.aa-colour-swatches--card .aa-swatch--active .aa-swatch__dot {
+	box-shadow: 0 0 0 1.5px #fff, 0 0 0 3px #333;
+}
+
+/* Tooltip — colour name above swatch */
+.aa-swatch[data-tooltip] {
+	overflow: visible;
+}
+
+.aa-swatch[data-tooltip]::after {
+	content: attr(data-tooltip);
+	position: absolute;
+	bottom: calc(100% + 2px);
+	left: 50%;
+	transform: translateX(-50%) translateY(4px);
+	padding: 4px 8px;
+	background: #111111;
+	color: #fff;
+	font-size: 1.05rem;
+	line-height: 1.2;
+	letter-spacing: 0.02em;
+	white-space: nowrap;
+	border-radius: 3px;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.12s ease, transform 0.12s ease;
+	z-index: 10;
+}
+
+.aa-swatch[data-tooltip]:hover::after,
+.aa-swatch[data-tooltip]:focus-visible::after {
+	opacity: 1;
+	transform: translateX(-50%) translateY(0);
+}
+
+/* Mobile spacing tweaks */
+@media (max-width: 749px) {
+	.aa-colour-swatches--product {
+		gap: 6px;
+		margin: 1rem 0 1.4rem;
+	}
+	.aa-colour-swatches--product .aa-swatch {
+		width: 40px;
+		height: 40px;
+		padding: 5px;
+	}
+}
