@@ -28,13 +28,14 @@ Sem IV CSE at ITM Skills University. I ship Shopify themes for founder-led brand
 
 <div align="center">
 
-<img width="48%" src="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=Sayuj63&theme=github_dark" alt="stats"/>
-<img width="48%" src="https://streak-stats.demolab.com?user=Sayuj63&hide_border=true&background=0e0b08&stroke=2a1e14&ring=c9a878&fire=c9a878&currStreakLabel=c9a878&sideLabels=f5ecdd&currStreakNum=f5ecdd&sideNums=f5ecdd&dates=f5ecdd" alt="streak"/>
+<img src="https://streak-stats.demolab.com?user=Sayuj63&hide_border=true&background=0e0b08&stroke=2a1e14&ring=c9a878&fire=c9a878&currStreakLabel=c9a878&sideLabels=f5ecdd&currStreakNum=f5ecdd&sideNums=f5ecdd&dates=f5ecdd" alt="streak"/>
 
-<img width="48%" src="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=Sayuj63&theme=github_dark" alt="repos-per-language"/>
-<img width="48%" src="https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=Sayuj63&theme=github_dark" alt="most-commit-language"/>
+<br/><br/>
 
-<img width="97%" src="https://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=Sayuj63&theme=github_dark&utcOffset=5.5" alt="productive-time"/>
+<img src="https://img.shields.io/badge/Mumbai-c9a878?style=flat-square&labelColor=0e0b08&label=Based+in" alt="based-in"/>
+&nbsp;<img src="https://img.shields.io/github/followers/Sayuj63?style=flat-square&color=c9a878&labelColor=0e0b08&label=Followers" alt="followers"/>
+&nbsp;<img src="https://img.shields.io/badge/Available-Q1+2026-c9a878?style=flat-square&labelColor=0e0b08" alt="availability"/>
+&nbsp;<img src="https://img.shields.io/badge/Open+to-Freelance-c9a878?style=flat-square&labelColor=0e0b08" alt="open-to"/>
 
 </div>
 
