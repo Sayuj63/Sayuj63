@@ -28,10 +28,10 @@ Sem IV CSE at ITM Skills University. I ship Shopify themes for founder-led brand
 
 <div align="center">
 
-<img height="165" src="https://github-readme-stats.vercel.app/api?username=Sayuj63&show_icons=true&hide_border=true&count_private=true&include_all_commits=true&bg_color=0e0b08&text_color=f5ecdd&title_color=c9a878&icon_color=c9a878&ring_color=c9a878" alt="stats"/>
+<img height="165" src="https://github-readme-stats.hackclub.dev/api?username=Sayuj63&show_icons=true&hide_border=true&count_private=true&include_all_commits=true&bg_color=0e0b08&text_color=f5ecdd&title_color=c9a878&icon_color=c9a878&ring_color=c9a878" alt="stats"/>
 <img height="165" src="https://streak-stats.demolab.com?user=Sayuj63&hide_border=true&background=0e0b08&stroke=2a1e14&ring=c9a878&fire=c9a878&currStreakLabel=c9a878&sideLabels=f5ecdd&currStreakNum=f5ecdd&sideNums=f5ecdd&dates=f5ecdd" alt="streak"/>
 
-<img width="65%" src="https://github-readme-stats.vercel.app/api/top-langs/?username=Sayuj63&layout=compact&hide_border=true&langs_count=8&bg_color=0e0b08&text_color=f5ecdd&title_color=c9a878&hide=roff,tex" alt="langs"/>
+<img width="65%" src="https://github-readme-stats.hackclub.dev/api/top-langs/?username=Sayuj63&layout=compact&hide_border=true&langs_count=8&bg_color=0e0b08&text_color=f5ecdd&title_color=c9a878&hide=roff,tex" alt="langs"/>
 
 </div>
 
