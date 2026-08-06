@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 260" width="900" height="260" role="img" aria-label="Ledger — 742 days shipping, 76 repos shipped, TypeScript primary stack">
+  <defs>
+    <style>
+      .bg  { fill: #0e0b08; }
+      .num { font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-weight: 400; fill: #f5ecdd; }
+      .lbl { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif; font-weight: 500; letter-spacing: 0.28em; text-transform: uppercase; fill: #c9a878; font-size: 11px; }
+      .cap { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif; font-weight: 400; fill: #8a7358; font-size: 13px; letter-spacing: 0.06em; }
+      .kicker { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif; font-weight: 500; letter-spacing: 0.32em; text-transform: uppercase; fill: #8a7358; font-size: 10px; }
+      .hairline { stroke: #c9a878; stroke-opacity: 0.22; stroke-width: 1; }
+      .fine     { stroke: #2a2119; stroke-width: 1; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="900" height="260"/>
+
+  <!-- Section kicker -->
+  <text x="42" y="42" class="kicker">Ledger — 2024 → 2026</text>
+  <line class="fine" x1="42" y1="60" x2="858" y2="60"/>
+
+  <!-- Column 1: Days shipping -->
+  <text x="42"  y="150" class="num" font-size="86">742</text>
+  <text x="42"  y="182" class="lbl">Days shipping</text>
+
+  <!-- Column 2: Repos shipped -->
+  <text x="332" y="150" class="num" font-size="86">76</text>
+  <text x="332" y="182" class="lbl">Repos shipped</text>
+
+  <!-- Column 3: Primary stack -->
+  <text x="596" y="150" class="num" font-size="72">TypeScript</text>
+  <text x="596" y="182" class="lbl">Primary stack</text>
+
+  <!-- Hairline dividers between columns -->
+  <line class="hairline" x1="304" y1="90" x2="304" y2="200"/>
+  <line class="hairline" x1="568" y1="90" x2="568" y2="200"/>
+
+  <!-- Bottom divider -->
+  <line class="fine" x1="42" y1="220" x2="858" y2="220"/>
+
+  <!-- Caption row -->
+  <text x="42"  y="244" class="cap">Now — Shopify PDPs · Next.js editorial · WorldQuant BRAIN alphas</text>
+  <text x="858" y="244" class="cap" text-anchor="end">Mumbai · IST</text>
+</svg>

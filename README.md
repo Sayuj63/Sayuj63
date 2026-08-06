@@ -24,18 +24,15 @@ Sem IV CSE at ITM Skills University. I ship Shopify themes for founder-led brand
 
 ---
 
-### Signal
+### *Ledger*
 
 <div align="center">
 
+<img src="./assets/ledger.svg" alt="Ledger — 742 days shipping, 76 repos shipped, TypeScript primary stack" width="100%"/>
+
+<br/>
+
 <img src="https://streak-stats.demolab.com?user=Sayuj63&hide_border=true&background=0e0b08&stroke=2a1e14&ring=c9a878&fire=c9a878&currStreakLabel=c9a878&sideLabels=f5ecdd&currStreakNum=f5ecdd&sideNums=f5ecdd&dates=f5ecdd" alt="streak"/>
-
-<br/><br/>
-
-<img src="https://img.shields.io/badge/Mumbai-c9a878?style=flat-square&labelColor=0e0b08&label=Based+in" alt="based-in"/>
-&nbsp;<img src="https://img.shields.io/github/followers/Sayuj63?style=flat-square&color=c9a878&labelColor=0e0b08&label=Followers" alt="followers"/>
-&nbsp;<img src="https://img.shields.io/badge/Available-Q1+2026-c9a878?style=flat-square&labelColor=0e0b08" alt="availability"/>
-&nbsp;<img src="https://img.shields.io/badge/Open+to-Freelance-c9a878?style=flat-square&labelColor=0e0b08" alt="open-to"/>
 
 </div>
 
