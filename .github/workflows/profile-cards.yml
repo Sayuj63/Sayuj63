@@ -1,0 +1,28 @@
+name: Generate profile summary cards
+
+on:
+  schedule:
+    - cron: "5 0 * * *"
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate cards
+        uses: vn7n24fzkq/github-profile-summary-cards@release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          USERNAME: Sayuj63
+          BRANCH_NAME: main
+          UTC_OFFSET: 5.5
