@@ -45,7 +45,7 @@ Sem IV CSE at ITM Skills University. I ship Shopify themes for founder-led brand
 | [`CARAMEL-STUDIO`](https://github.com/Sayuj63/CARAMEL-STUDIO) | Studio Caramel — Next 16 editorial photography site |
 | [`donna-voice-hermes`](https://github.com/Sayuj63/donna-voice-hermes) | Donna — realtime voice agent on Cloudflare + WebRTC |
 | [`ISOA`](https://github.com/Sayuj63/ISOA) | ISOA — Shopify theme with a custom pill-rail design system |
-| [`Devops-internals`](https://github.com/Sayuj63/Devops-internals) | SIM Provisioning Platform — DevOps case study |
+| [`SIM Provisioning Automation Platform`](https://github.com/Sayuj63/Devops-internals) | SIM Provisioning Platform — DevOps case study |
 | [`World_Brain_Quant`](https://github.com/Sayuj63/World_Brain_Quant) | WorldQuant BRAIN alpha research and results log |
 | [`vapt-env`](https://github.com/Sayuj63/vapt-env) | AI security reasoning benchmark environment |
 
